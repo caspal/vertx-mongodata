@@ -1,0 +1,25 @@
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  def vertx_version = '3.4.2+'
+
+  // Vertx
+  compileOnly group: 'io.vertx', name: 'vertx-core', version: vertx_version
+  compileOnly group: 'io.vertx', name: 'vertx-mongo-client', version: vertx_version
+
+  // Logging
+  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+  compileOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.7'
+  compileOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8'
+
+  // Test
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'io.vertx', name: 'vertx-unit', version: vertx_version
+
+  testCompile group: 'com.google.truth', name: 'truth', version: '0.33'
+
+  // Embedded MongoDB
+  testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "2.0.0"
+}
