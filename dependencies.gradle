@@ -1,0 +1,19 @@
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  // Vertx
+  runtime group: 'io.vertx', name: 'vertx-core', version: '3.4.1'
+  runtime group: 'io.vertx', name: 'vertx-mongo-client', version: '3.4.1'
+
+  // Test
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'io.vertx', name: 'vertx-unit', version: '3.4.1'
+
+  runtime group: 'com.google.guava', name: 'guava', version: '22.0'
+  testCompile group: 'com.google.truth', name: 'truth', version: '0.33'
+  
+  // Embedded MongoDB
+  testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "2.0.0"
+}
