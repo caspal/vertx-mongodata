@@ -1,6 +1,47 @@
 # vertx-mongodata
 An async access framework for mongodb
 
+## MongoCollection
+MongoCollection is a tool to store objects of any type in a [MongoDB](https://www.mongodb.com/). It's the nature
+of MongoDB, that it can only handle json objects. To store objects of another type, it's necessary to
+provide encode and decode functions. MongoCollection helps to bundle all necessary logic at one point.
+
+MongoCollection provides actions to access and manipulate data in a MongoDB. A list of supported actions can
+be found [here](Link to jdoc) //TODO
+
+## MongoCollectionFactory
+MongoCollectionFactory is a factory to build MongoCollection instances. An instance of MongoCollectionFactory can be
+created by calling the *using* method with an instance of [MongoClient](http://vertx.io/docs/vertx-mongo-client/java/)
+or MongoService.
+
+```
+    public static MongoCollectionFactory using(MongoClient client);
+    public static MongoCollectionFactory using(MongoService ms);
+```
+
+The MongoCollectionFactory itsef can create MongoCollection instances by calling the method *build*. The *build*
+method needs a collection name and functions to decode and encode the resource type.
+
+```
+public <T> MongoCollection<T> build(String collectionName, Function<T, JsonObject> encode, Function<JsonObject, T> decode);
+```
+
+### Resource Transformation
+If attributes of a resource don't fit to the JSON data types, have a look at [MongoDB extend JSON support](http://vertx.io/docs/vertx-mongo-client/java/#_mongodb_extended_json_support).
+This could be very helpful especially in the case that an attribute is a binary.
+
+## MongoService
+With MongoService you can access a MongoDB via the Vertx EventBus with all advantages of MongoCollection. Just deploy a
+MongoServiceVerticle somewhere in the Vertx cluster and create a MongoService instance.
+
+```
+// Create MongoServiceVerticle with serviceAddress and MongoDB configurations
+vertx.deployVerticle(new MongoServiceVerticle(serviceAddress, mongoConfig)
+
+// Create a MongoService instance
+MongoService ms = MongoSevice.createInstance(eventBus, serviceAddress);
+```
+
 ## Contribute
 We are using Gerrit, so PRs in Github will be ignored. Please use [GerritHub.io](https://review.gerrithub.io)
 to contribute changes. The project name is *caspal/vertx-mongodata*
