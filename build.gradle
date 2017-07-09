@@ -1,7 +1,11 @@
 apply plugin: 'base'
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'application'
+
+// check if gradle.properties is available
+if (project.hasProperty('ossrhUsername')) {
+  apply from: 'maven.gradle'
+}
 
 apply from: 'dependencies.gradle'
 
