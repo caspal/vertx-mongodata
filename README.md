@@ -7,7 +7,7 @@ of MongoDB, that it can only handle json objects. To store objects of another ty
 provide encode and decode functions. MongoCollection helps to bundle all necessary logic at one point.
 
 MongoCollection provides actions to access and manipulate data in a MongoDB. A list of supported actions can
-be found [here](Link to jdoc) //TODO
+be found [here](Link to jdoc //TODO)
 
 ## MongoCollectionFactory
 MongoCollectionFactory is a factory to build MongoCollection instances. An instance of MongoCollectionFactory can be

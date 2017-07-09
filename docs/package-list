@@ -1,0 +1,4 @@
+info.pascalkrause.vertx.mongodata
+info.pascalkrause.vertx.mongodata.collection
+info.pascalkrause.vertx.mongodata.datasource
+info.pascalkrause.vertx.mongodata.service
