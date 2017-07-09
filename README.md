@@ -1,13 +1,29 @@
 # vertx-mongodata
 An async access framework for mongodb
 
+## Import
+Maven
+```
+<dependency>
+  <groupId>info.pascalkrause</groupId>
+  <artifactId>vertx-mongodata</artifactId>
+  <version>0.0.1</version>
+  <scope>compile</scope>
+</dependency>
+```
+
+Gradle
+```
+compile info.pascalkrause:vertx-mongodata:0.0.1
+```
+
 ## MongoCollection
 MongoCollection is a tool to store objects of any type in a [MongoDB](https://www.mongodb.com/). It's the nature
 of MongoDB, that it can only handle json objects. To store objects of another type, it's necessary to
 provide encode and decode functions. MongoCollection helps to bundle all necessary logic at one point.
 
 MongoCollection provides actions to access and manipulate data in a MongoDB. A list of supported actions can
-be found [here](https://caspal.github.io/vertx-mongodata/info/pascalkrause/vertx/mongodata/collection/MongoCollection.html)
+be found [here](https://caspal.github.io/vertx-mongodata/info/pascalkrause/vertx/mongodata/collection/MongoCollection.html).
 
 ## MongoCollectionFactory
 MongoCollectionFactory is a factory to build MongoCollection instances. An instance of MongoCollectionFactory can be
