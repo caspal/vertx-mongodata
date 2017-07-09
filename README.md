@@ -7,7 +7,7 @@ of MongoDB, that it can only handle json objects. To store objects of another ty
 provide encode and decode functions. MongoCollection helps to bundle all necessary logic at one point.
 
 MongoCollection provides actions to access and manipulate data in a MongoDB. A list of supported actions can
-be found [here](Link to jdoc //TODO)
+be found [here](https://caspal.github.io/vertx-mongodata/info/pascalkrause/vertx/mongodata/collection/MongoCollection.html)
 
 ## MongoCollectionFactory
 MongoCollectionFactory is a factory to build MongoCollection instances. An instance of MongoCollectionFactory can be
@@ -59,4 +59,4 @@ to contribute changes. The project name is *caspal/vertx-mongodata*
 10. Adapt your code to the surroundings.
 11. Follow the default language style guide.
   * [Java](http://www.oracle.com/technetwork/java/codeconventions-150003.pdf)
-  * [JavaScript](http://vertx.io/)http://javascript.crockford.com/code.html
+  * [JavaScript](http://javascript.crockford.com/code.html)
