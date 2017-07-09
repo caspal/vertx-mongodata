@@ -3,14 +3,20 @@ repositories {
 }
 
 dependencies {
-  def vertx_version = '3.4.2+'
+  def vertx_version = '[3.4.2,)'
 
   // Vertx
+<<<<<<< Upstream, based on origin/master
   compileOnly group: 'io.vertx', name: 'vertx-core', version: vertx_version
   compileOnly group: 'io.vertx', name: 'vertx-mongo-client', version: vertx_version
 
+=======
+  compile group: 'io.vertx', name: 'vertx-core', version: vertx_version
+  compile group: 'io.vertx', name: 'vertx-mongo-client', version: vertx_version
+ 
+>>>>>>> 1978b2a Add configurations to push to Maven Central
   // Util
-  runtime group: 'com.google.guava', name: 'guava', version: '22.0'
+  compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
   // Test
   testCompile group: 'junit', name: 'junit', version: '4.12'
