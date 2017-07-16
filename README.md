@@ -14,7 +14,7 @@ Maven
 
 Gradle
 ```
-compile info.pascalkrause:vertx-mongodata:0.0.1
+compile 'info.pascalkrause:vertx-mongodata:0.0.1'
 ```
 
 ## MongoCollection
@@ -69,10 +69,10 @@ to contribute changes. The project name is *caspal/vertx-mongodata*
 4. The maximum length of a line should be between 80 and 120 characters.
 5. Use spaces instead of tabs.
 6. Use 4 spaces for indentation
-  * If the project already uses 2, adapt the project rules
+    - If the project already uses 2, adapt the project rules
 8. No trailing whitespaces.
 9. Avoid unnecessary empty lines.
 10. Adapt your code to the surroundings.
 11. Follow the default language style guide.
-  * [Java](http://www.oracle.com/technetwork/java/codeconventions-150003.pdf)
-  * [JavaScript](http://javascript.crockford.com/code.html)
+    - [Java](http://www.oracle.com/technetwork/java/codeconventions-150003.pdf)
+    - [JavaScript](http://javascript.crockford.com/code.html)
