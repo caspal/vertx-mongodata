@@ -18,7 +18,7 @@ public class MongoCollectionFactory {
         this.mds = mds;
     }
 
-    public static MongoCollectionFactory using(MongoClientDataSource mds) {
+    public static MongoCollectionFactory using(MongoDataSource mds) {
         return new MongoCollectionFactory(mds);
     }
 
