@@ -16,8 +16,11 @@ import info.pascalkrause.vertx.mongodata.TestUtils;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.AbstractMongoCollectionTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.BulkInsertTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.Count_CountAllTest;
+import info.pascalkrause.vertx.mongodata.collection.mongocollection.CreateIndexTest;
+import info.pascalkrause.vertx.mongodata.collection.mongocollection.DeleteIndexTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.DropTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.Find_FindAllTest;
+import info.pascalkrause.vertx.mongodata.collection.mongocollection.ListIndexTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.RemoveTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.UpsertTest;
 import info.pascalkrause.vertx.mongodata.datasource.MongoClientDataSource;
@@ -68,7 +71,9 @@ public class MongoCollectionTestSuite {
         List<AbstractMongoCollectionTest> suites = ImmutableList.<AbstractMongoCollectionTest>builder()
                 .add(new Find_FindAllTest(suiteName, mds, mc)).add(new UpsertTest(suiteName, mds, mc))
                 .add(new RemoveTest(suiteName, mds, mc)).add(new BulkInsertTest(suiteName, mds, mc))
-                .add(new DropTest(suiteName, mds, mc)).add(new Count_CountAllTest(suiteName, mds, mc)).build();
+                .add(new CreateIndexTest(suiteName, mds, mc)).add(new ListIndexTest(suiteName, mds, mc))
+                .add(new DeleteIndexTest(suiteName, mds, mc)).add(new DropTest(suiteName, mds, mc))
+                .add(new Count_CountAllTest(suiteName, mds, mc)).build();
         return suites;
     }
 
@@ -90,21 +95,22 @@ public class MongoCollectionTestSuite {
                 return;
             }
             MongoService ms = MongoService.createEventBusProxy(vertx, serviceAddress);
-                List<AbstractMongoCollectionTest> suites = initializeSuites(new MongoClientDataSource(ms), SUITE_NAME_SERVICE);
-                vertx.executeBlocking(fut -> {
-                    suites.forEach(suite -> {
-                        try {
-                            suite.getSuite().run(vertx, TestUtils.getTestOptions(vertx))
-                                    .awaitSuccess(TimeUnit.SECONDS.toMillis(2));
-                        } catch (Throwable t) {
-                            testContext.fail(t);
-                            testComplete.complete();
-                        }
-                    });
-                    fut.complete();
-                }, res -> {
-                    testComplete.complete();
+            List<AbstractMongoCollectionTest> suites = initializeSuites(new MongoClientDataSource(ms),
+                    SUITE_NAME_SERVICE);
+            vertx.executeBlocking(fut -> {
+                suites.forEach(suite -> {
+                    try {
+                        suite.getSuite().run(vertx, TestUtils.getTestOptions(vertx))
+                                .awaitSuccess(TimeUnit.SECONDS.toMillis(2));
+                    } catch (Throwable t) {
+                        testContext.fail(t);
+                        testComplete.complete();
+                    }
                 });
+                fut.complete();
+            }, res -> {
+                testComplete.complete();
+            });
         });
     }
 }

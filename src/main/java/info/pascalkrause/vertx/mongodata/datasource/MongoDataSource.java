@@ -2,8 +2,10 @@ package info.pascalkrause.vertx.mongodata.datasource;
 
 import java.util.List;
 
+import info.pascalkrause.vertx.mongodata.collection.Index;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 public interface MongoDataSource {
@@ -69,4 +71,34 @@ public interface MongoDataSource {
      * @return The actual instance of MongoDataSource.
      */
     MongoDataSource dropCollection(String collection, Handler<AsyncResult<Void>> resultHandler);
+
+    /**
+     * List all indexes.
+     * 
+     * @param collection The collection.
+     * @param resultHandler A handler which contains a JsonArray including indexes.
+     * @return The actual MongoDataSource.
+     */
+    MongoDataSource listIndexes(String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    
+    /**
+     * Creates an index on the collection.
+     * 
+     * If there is already an index with this name, it will be overridden.
+     * 
+     * @param collection The collection.
+     * @param resultHandler A handler which will be called when the index is created.
+     * @return The actual MongoDataSource.
+     */
+    MongoDataSource createIndex(String collection, Index index, Handler<AsyncResult<Void>> resultHandler);
+    
+    /**
+     * Deletes an index.
+     * 
+     * @param collection The collection.
+     * @param name The name of the index which should be deleted.
+     * @param resultHandler A handler which will be called when the index is deleted.
+     * @return The actual MongoDataSource.
+     */
+    MongoDataSource deleteIndex(String collection, String name, Handler<AsyncResult<Void>> resultHandler);
 }

@@ -95,4 +95,33 @@ public interface MongoCollection<T> {
      * @return The actual MongoCollection.
      */
     public MongoCollection<T> drop(Handler<AsyncResult<Void>> resultHandler);
+
+    /**
+     * List all indexes.
+     * 
+     * @param resultHandler A handler which contains a list of indexes.
+     * @return The actual MongoCollection.
+     */
+    public MongoCollection<T> listIndexes(Handler<AsyncResult<List<Index>>> resultHandler);
+    
+    /**
+     * Creates an index.
+     * 
+     * If there is already an index with this name, it will be overridden.
+     * 
+     * @param index An Index object, that represents the index.
+     * @param resultHandler A handler which will be called when the index is created.
+     * @return The actual MongoCollection.
+     */
+    public MongoCollection<T> createIndex(Index index, Handler<AsyncResult<Void>> resultHandler);
+    
+    /**
+     * Deletes an index.
+     * 
+     * @param name The name of the index which should be deleted.
+     * @param resultHandler A handler which will be called when the index is deleted.
+     * @return The actual MongoCollection.
+     */
+    public MongoCollection<T> deleteIndex(String name, Handler<AsyncResult<Void>> resultHandler);
+
 }
