@@ -114,4 +114,38 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
         mds.dropCollection(collectionName, resultHandler);
         return this;
     }
+
+    @Override
+    public MongoCollection<T> listIndexes(Handler<AsyncResult<List<Index>>> resultHandler) {
+        mds.listIndexes(collectionName, res -> {
+            if (res.failed()) {
+                resultHandler.handle(new SimpleAsyncResult<List<Index>>(res.cause()));
+                return;
+            }
+            List<Index> indexes = res.result().stream().map(o -> ((JsonObject) o)).map(indexObject -> {
+                String name = indexObject.getString("name");
+                boolean unique = indexObject.getBoolean("unique", false);
+
+                JsonObject key = indexObject.getJsonObject("key");
+                String column = key.fieldNames().stream().findFirst().get();
+                boolean ascending = key.getInteger(column) == 1 ? true : false;
+
+                return new Index(name, column, unique, ascending);
+            }).collect(Collectors.toList());
+            resultHandler.handle(new SimpleAsyncResult<List<Index>>(indexes));
+        });
+        return this;
+    }
+
+    @Override
+    public MongoCollection<T> createIndex(Index index, Handler<AsyncResult<Void>> resultHandler) {
+        mds.createIndex(collectionName, index, resultHandler);
+        return this;
+    }
+
+    @Override
+    public MongoCollection<T> deleteIndex(String name, Handler<AsyncResult<Void>> resultHandler) {
+        mds.deleteIndex(collectionName, name, resultHandler);
+        return this;
+    }
 }

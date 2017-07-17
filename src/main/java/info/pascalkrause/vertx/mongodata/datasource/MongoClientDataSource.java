@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import info.pascalkrause.vertx.mongodata.SimpleAsyncResult;
+import info.pascalkrause.vertx.mongodata.collection.Index;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.BulkOperation;
+import io.vertx.ext.mongo.IndexOptions;
 import io.vertx.ext.mongo.MongoClient;
 
 public class MongoClientDataSource implements MongoDataSource {
@@ -69,6 +72,27 @@ public class MongoClientDataSource implements MongoDataSource {
     @Override
     public MongoDataSource dropCollection(String collection, Handler<AsyncResult<Void>> resultHandler) {
         mc.dropCollection(collection, resultHandler);
+        return this;
+    }
+
+    @Override
+    public MongoDataSource createIndex(String collection, Index index, Handler<AsyncResult<Void>> resultHandler) {
+        JsonObject key = new JsonObject();
+        key.put(index.getColumn(), index.isAscending() ? 1 : -1);
+        mc.createIndexWithOptions(collection, key, new IndexOptions().unique(index.isUnique()).name(index.getName()),
+                resultHandler);
+        return this;
+    }
+
+    @Override
+    public MongoDataSource listIndexes(String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
+        mc.listIndexes(collection, resultHandler);
+        return this;
+    }
+
+    @Override
+    public MongoDataSource deleteIndex(String collection, String name, Handler<AsyncResult<Void>> resultHandler) {
+        mc.dropIndex(collection, name, resultHandler);
         return this;
     }
 }
