@@ -7,14 +7,14 @@ Maven
 <dependency>
   <groupId>info.pascalkrause</groupId>
   <artifactId>vertx-mongodata</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <scope>compile</scope>
 </dependency>
 ```
 
 Gradle
 ```
-compile 'info.pascalkrause:vertx-mongodata:0.0.1'
+compile 'info.pascalkrause:vertx-mongodata:0.0.2'
 ```
 
 ## MongoCollection
