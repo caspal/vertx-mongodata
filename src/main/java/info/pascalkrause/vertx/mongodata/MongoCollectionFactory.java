@@ -6,9 +6,9 @@ import info.pascalkrause.vertx.mongodata.collection.MongoCollection;
 import info.pascalkrause.vertx.mongodata.collection.MongoCollectionImpl;
 import info.pascalkrause.vertx.mongodata.datasource.MongoClientDataSource;
 import info.pascalkrause.vertx.mongodata.datasource.MongoDataSource;
-import info.pascalkrause.vertx.mongodata.service.MongoService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
+import io.vertx.ext.mongo.MongoService;
 
 public class MongoCollectionFactory {
 
@@ -27,7 +27,7 @@ public class MongoCollectionFactory {
     }
 
     public static MongoCollectionFactory using(MongoService ms) {
-        return new MongoCollectionFactory(ms.getDataSource());
+        return MongoCollectionFactory.using(ms);
     }
 
     public <T> MongoCollection<T> build(String collectionName, Function<T, JsonObject> encode,

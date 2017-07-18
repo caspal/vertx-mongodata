@@ -55,7 +55,7 @@ MongoServiceVerticle somewhere in the Vertx cluster and create a MongoService in
 vertx.deployVerticle(new MongoServiceVerticle(serviceAddress, mongoConfig)
 
 // Create a MongoService instance
-MongoService ms = MongoSevice.createInstance(eventBus, serviceAddress);
+MongoService ms = MongoService.createEventBusProxy(vertx, serviceAddress);
 ```
 
 ## Contribute

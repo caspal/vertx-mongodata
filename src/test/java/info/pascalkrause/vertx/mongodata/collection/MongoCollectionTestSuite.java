@@ -22,12 +22,12 @@ import info.pascalkrause.vertx.mongodata.collection.mongocollection.RemoveTest;
 import info.pascalkrause.vertx.mongodata.collection.mongocollection.UpsertTest;
 import info.pascalkrause.vertx.mongodata.datasource.MongoClientDataSource;
 import info.pascalkrause.vertx.mongodata.datasource.MongoDataSource;
-import info.pascalkrause.vertx.mongodata.service.MongoService;
 import info.pascalkrause.vertx.mongodata.service.MongoServiceVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
+import io.vertx.ext.mongo.MongoService;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -89,12 +89,8 @@ public class MongoCollectionTestSuite {
             if (deployResponse.failed()) {
                 return;
             }
-            MongoService mcs = MongoService.createInstance(vertx.eventBus(), serviceAddress);
-            mcs.checkAvailability(availableCheck -> {
-                if (availableCheck.failed()) {
-                    return;
-                }
-                List<AbstractMongoCollectionTest> suites = initializeSuites(mcs.getDataSource(), SUITE_NAME_SERVICE);
+            MongoService ms = MongoService.createEventBusProxy(vertx, serviceAddress);
+                List<AbstractMongoCollectionTest> suites = initializeSuites(new MongoClientDataSource(ms), SUITE_NAME_SERVICE);
                 vertx.executeBlocking(fut -> {
                     suites.forEach(suite -> {
                         try {
@@ -109,7 +105,6 @@ public class MongoCollectionTestSuite {
                 }, res -> {
                     testComplete.complete();
                 });
-            });
         });
     }
 }
