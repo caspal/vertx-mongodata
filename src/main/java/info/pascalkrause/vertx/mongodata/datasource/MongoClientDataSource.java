@@ -3,9 +3,9 @@ package info.pascalkrause.vertx.mongodata.datasource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import info.pascalkrause.vertx.mongodata.SimpleAsyncResult;
 import info.pascalkrause.vertx.mongodata.collection.Index;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -43,15 +43,15 @@ public class MongoClientDataSource implements MongoDataSource {
     @Override
     public MongoDataSource bulkInsert(String collection, List<JsonObject> documents,
             Handler<AsyncResult<Long>> resultHandler) {
-        List<BulkOperation> operations = documents.parallelStream()
+        final List<BulkOperation> operations = documents.parallelStream()
                 .map(document -> BulkOperation.createInsert(document.copy())).collect(Collectors.toList());
 
         mc.bulkWrite(collection, operations, dbResponse -> {
             if (dbResponse.failed()) {
-                resultHandler.handle(new SimpleAsyncResult<Long>(dbResponse.cause()));
+                resultHandler.handle(Future.failedFuture(dbResponse.cause()));
                 return;
             }
-            resultHandler.handle(new SimpleAsyncResult<Long>(dbResponse.result().getInsertedCount()));
+            resultHandler.handle(Future.succeededFuture(dbResponse.result().getInsertedCount()));
         });
         return this;
     }
@@ -61,10 +61,10 @@ public class MongoClientDataSource implements MongoDataSource {
             Handler<AsyncResult<Long>> resultHandler) {
         mc.removeDocuments(collection, query, deleteResult -> {
             if (deleteResult.failed()) {
-                resultHandler.handle(new SimpleAsyncResult<Long>(deleteResult.cause()));
+                resultHandler.handle(Future.failedFuture(deleteResult.cause()));
                 return;
             }
-            resultHandler.handle(new SimpleAsyncResult<Long>(deleteResult.result().getRemovedCount()));
+            resultHandler.handle(Future.succeededFuture(deleteResult.result().getRemovedCount()));
         });
         return this;
     }
@@ -77,7 +77,7 @@ public class MongoClientDataSource implements MongoDataSource {
 
     @Override
     public MongoDataSource createIndex(String collection, Index index, Handler<AsyncResult<Void>> resultHandler) {
-        JsonObject key = new JsonObject();
+        final JsonObject key = new JsonObject();
         key.put(index.getColumn(), index.isAscending() ? 1 : -1);
         mc.createIndexWithOptions(collection, key, new IndexOptions().unique(index.isUnique()).name(index.getName()),
                 resultHandler);

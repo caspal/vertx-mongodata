@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import info.pascalkrause.vertx.mongodata.SimpleAsyncResult;
 import info.pascalkrause.vertx.mongodata.datasource.MongoDataSource;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
@@ -23,7 +23,7 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
      * types you should use a new JsonObject which contains a key with the name "$binary".
      * <p>
      * Example:<br>
-     * 
+     *
      * <pre>
      * {
      *     JsonObject encoded = new JsonObject();
@@ -31,7 +31,7 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
      *     encoded.put("image", new JsonObject().put("$binary", resource.getImageBytes()));
      * }
      * </pre>
-     * 
+     *
      * @param collectionName The name of the collection in the database.
      * @param encode A method to transform the resource object into a JsonObject which can be handled by the database.
      * @param decode A method to transform the JsonObject return from the database into a resource object.
@@ -63,7 +63,7 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
 
     @Override
     public MongoCollectionImpl<T> bulkInsert(Collection<T> resources, Handler<AsyncResult<Long>> resultHandler) {
-        List<JsonObject> documents = resources.parallelStream().map(resource -> encode.apply(resource))
+        final List<JsonObject> documents = resources.parallelStream().map(resource -> encode.apply(resource))
                 .collect(Collectors.toList());
         mds.bulkInsert(collectionName, documents, resultHandler);
         return this;
@@ -85,12 +85,12 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
     public MongoCollectionImpl<T> find(JsonObject query, Handler<AsyncResult<List<T>>> resultHandler) {
         mds.find(collectionName, query, dbResponse -> {
             if (dbResponse.failed()) {
-                resultHandler.handle(new SimpleAsyncResult<List<T>>(dbResponse.cause()));
+                resultHandler.handle(Future.failedFuture(dbResponse.cause()));
                 return;
             }
-            List<T> results = dbResponse.result().parallelStream().map(json -> decode.apply(json))
+            final List<T> results = dbResponse.result().parallelStream().map(json -> decode.apply(json))
                     .collect(Collectors.toList());
-            resultHandler.handle(new SimpleAsyncResult<List<T>>(results));
+            resultHandler.handle(Future.succeededFuture(results));
         });
         return this;
     }
@@ -103,7 +103,7 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
 
     @Override
     public MongoCollectionImpl<T> remove(String id, Handler<AsyncResult<Long>> resultHandler) {
-        JsonObject removeQuery = new JsonObject();
+        final JsonObject removeQuery = new JsonObject();
         removeQuery.put("_id", id);
         remove(removeQuery, resultHandler);
         return this;
@@ -119,20 +119,20 @@ public class MongoCollectionImpl<T> implements MongoCollection<T> {
     public MongoCollection<T> listIndexes(Handler<AsyncResult<List<Index>>> resultHandler) {
         mds.listIndexes(collectionName, res -> {
             if (res.failed()) {
-                resultHandler.handle(new SimpleAsyncResult<List<Index>>(res.cause()));
+                resultHandler.handle(Future.failedFuture(res.cause()));
                 return;
             }
-            List<Index> indexes = res.result().stream().map(o -> ((JsonObject) o)).map(indexObject -> {
-                String name = indexObject.getString("name");
-                boolean unique = indexObject.getBoolean("unique", false);
+            final List<Index> indexes = res.result().stream().map(o -> ((JsonObject) o)).map(indexObject -> {
+                final String name = indexObject.getString("name");
+                final boolean unique = indexObject.getBoolean("unique", false);
 
-                JsonObject key = indexObject.getJsonObject("key");
-                String column = key.fieldNames().stream().findFirst().get();
-                boolean ascending = key.getInteger(column) == 1 ? true : false;
+                final JsonObject key = indexObject.getJsonObject("key");
+                final String column = key.fieldNames().stream().findFirst().get();
+                final boolean ascending = key.getInteger(column) == 1 ? true : false;
 
                 return new Index(name, column, unique, ascending);
             }).collect(Collectors.toList());
-            resultHandler.handle(new SimpleAsyncResult<List<Index>>(indexes));
+            resultHandler.handle(Future.succeededFuture(indexes));
         });
         return this;
     }
